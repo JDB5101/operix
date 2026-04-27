@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operix — Inteligencia Operativa para la Industria Colombiana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:   #070a0e;
+  --surface: #0d1117;
+  --panel:   #111820;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --gold:    #c9a84c;
+  --gold2:   #e8c97a;
+  --indigo:  #4f6ef7;
+  --indigo2: #7b95ff;
+  --muted:   #4a5568;
+  --text:    #e2e8f0;
+  --text2:   #94a3b8;
+  --text3:   #64748b;
+  --radius:  12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--black);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ── NOISE TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.6;
+}
+
+/* ── TYPOGRAPHY ── */
+.font-display { font-family: 'Syne', sans-serif; }
+.font-mono    { font-family: 'DM Mono', monospace; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 20px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: rgba(7, 10, 14, 0.85);
+  backdrop-filter: blur(20px);
+}
+
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 800;
+  letter-spacing: -0.5px; color: #fff;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.nav-logo .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold); display: inline-block;
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.nav-links {
+  display: flex; align-items: center; gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px; font-weight: 500; color: var(--text2);
+  text-decoration: none; letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+
+.nav-cta {
+  padding: 9px 22px;
+  background: var(--gold);
+  color: #0a0800 !important;
+  border-radius: 999px;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: var(--gold2) !important; transform: translateY(-1px); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 120px 48px 80px;
+  position: relative; overflow: hidden;
+  text-align: center;
+}
+
+.hero-grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+}
+
+.hero-glow {
+  position: absolute; top: 20%; left: 50%;
+  transform: translateX(-50%);
+  width: 800px; height: 400px;
+  background: radial-gradient(ellipse, rgba(79,110,247,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: 999px;
+  border: 1px solid rgba(201,168,76,0.3);
+  background: rgba(201,168,76,0.06);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--gold);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 32px;
+  animation: fade-up 0.6s ease both;
+}
+
+.hero-badge::before {
+  content: ''; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--gold);
+  animation: pulse-dot 2s infinite;
+}
+
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(42px, 7vw, 88px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  color: #fff;
+  max-width: 900px;
+  animation: fade-up 0.6s 0.1s ease both;
+}
+
+h1 .accent { color: var(--gold); }
+h1 .accent2 { color: var(--indigo2); }
+
+.hero-sub {
+  margin-top: 28px;
+  font-size: 18px; color: var(--text2);
+  max-width: 580px; line-height: 1.7;
+  animation: fade-up 0.6s 0.2s ease both;
+}
+
+.hero-actions {
+  margin-top: 44px;
+  display: flex; gap: 14px; flex-wrap: wrap;
+  justify-content: center;
+  animation: fade-up 0.6s 0.3s ease both;
+}
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: 999px;
+  background: var(--gold); color: #0a0800;
+  font-weight: 700; font-size: 15px;
+  text-decoration: none;
+  transition: all 0.25s;
+  border: none; cursor: pointer;
+}
+.btn-primary:hover { background: var(--gold2); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,168,76,0.3); }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: 999px;
+  background: transparent; color: var(--text);
+  font-weight: 600; font-size: 15px;
+  text-decoration: none;
+  border: 1px solid var(--border2);
+  transition: all 0.25s;
+}
+.btn-secondary:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); transform: translateY(-2px); }
+
+.hero-stats {
+  margin-top: 80px;
+  display: flex; gap: 0; flex-wrap: wrap;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  max-width: 720px; width: 100%;
+  animation: fade-up 0.6s 0.4s ease both;
+}
+
+.stat {
+  flex: 1; min-width: 160px;
+  padding: 28px 32px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+}
+.stat:last-child { border-right: none; }
+
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px; font-weight: 800;
+  color: var(--gold); line-height: 1;
+}
+.stat-label {
+  margin-top: 6px;
+  font-size: 12px; color: var(--text3);
+  letter-spacing: 0.5px; line-height: 1.4;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── SECTION BASE ── */
+section { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 800; letter-spacing: -1px;
+  color: #fff; line-height: 1.1;
+}
+.section-sub {
+  margin-top: 16px;
+  font-size: 17px; color: var(--text2);
+  line-height: 1.7; max-width: 560px;
+}
+
+/* ── PROBLEMA ── */
+#problema { border-top: 1px solid var(--border); }
+
+.problema-grid {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+}
+
+.problema-item {
+  background: var(--surface);
+  padding: 36px 40px;
+  position: relative;
+  transition: background 0.2s;
+}
+.problema-item:hover { background: var(--panel); }
+
+.problema-icon {
+  font-size: 28px; margin-bottom: 16px;
+}
+.problema-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 700;
+  color: #fff; margin-bottom: 10px;
+}
+.problema-desc {
+  font-size: 14px; color: var(--text2);
+  line-height: 1.7;
+}
+
+.vs-arrow {
+  text-align: center; margin: 48px 0;
+  display: flex; align-items: center; gap: 20px;
+}
+.vs-arrow::before, .vs-arrow::after {
+  content: ''; flex: 1;
+  height: 1px; background: var(--border);
+}
+.vs-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--gold);
+  letter-spacing: 2px; white-space: nowrap;
+}
+
+/* ── SOLUCIONES ── */
+#soluciones {
+  border-top: 1px solid var(--border);
+}
+
+.soluciones-grid {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.solucion-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 32px;
+  position: relative; overflow: hidden;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: block;
+}
+
+.solucion-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.solucion-card:hover {
+  border-color: rgba(201,168,76,0.25);
+  background: var(--panel);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.solucion-card:hover::before { transform: scaleX(1); }
+
+.solucion-card.coming-soon {
+  opacity: 0.5; cursor: not-allowed;
+}
+.solucion-card.coming-soon:hover {
+  transform: none; box-shadow: none;
+}
+
+.card-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--text3);
+  letter-spacing: 2px; margin-bottom: 20px;
+}
+
+.card-icon {
+  font-size: 32px; margin-bottom: 16px;
+}
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px; font-weight: 700;
+  color: #fff; margin-bottom: 8px;
+}
+
+.card-norm {
+  font-size: 12px; color: var(--gold);
+  font-family: 'DM Mono', monospace;
+  margin-bottom: 16px;
+}
+
+.card-desc {
+  font-size: 14px; color: var(--text2);
+  line-height: 1.7; margin-bottom: 24px;
+}
+
+.card-features {
+  list-style: none; display: flex;
+  flex-direction: column; gap: 8px;
+}
+
+.card-features li {
+  font-size: 13px; color: var(--text2);
+  display: flex; align-items: flex-start; gap: 10px;
+}
+
+.card-features li::before {
+  content: '→';
+  color: var(--gold); font-size: 12px;
+  flex-shrink: 0; margin-top: 1px;
+}
+
+.card-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 28px;
+  padding: 5px 12px; border-radius: 999px;
+  font-size: 11px; font-weight: 600;
+  font-family: 'DM Mono', monospace;
+}
+.badge-live {
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.25);
+  color: #4ade80;
+}
+.badge-live::before {
+  content: ''; width: 6px; height: 6px;
+  border-radius: 50%; background: #22c55e;
+}
+.badge-soon {
+  background: rgba(100,116,139,0.1);
+  border: 1px solid rgba(100,116,139,0.2);
+  color: var(--text3);
+}
+
+/* ── COMO FUNCIONA ── */
+#como-funciona {
+  border-top: 1px solid var(--border);
+}
+
+.pasos {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  position: relative;
+}
+
+.pasos::before {
+  content: '';
+  position: absolute;
+  top: 28px; left: 0; right: 0;
+  height: 1px; background: var(--border);
+  z-index: 0;
+}
+
+.paso {
+  padding: 0 32px;
+  position: relative; z-index: 1;
+  text-align: center;
+}
+
+.paso-num {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--black);
+  border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 28px;
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 800;
+  color: var(--gold);
+}
+
+.paso-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 700;
+  color: #fff; margin-bottom: 12px;
+}
+
+.paso-desc {
+  font-size: 14px; color: var(--text2);
+  line-height: 1.7;
+}
+
+.paso-icon {
+  font-size: 24px; margin-bottom: 12px;
+}
+
+/* ── MODELO ── */
+#modelo {
+  border-top: 1px solid var(--border);
+}
+
+.fases {
+  margin-top: 56px;
+  display: flex; flex-direction: column; gap: 2px;
+  border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+}
+
+.fase {
+  background: var(--surface);
+  padding: 36px 48px;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 48px; align-items: start;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.fase:last-child { border-bottom: none; }
+.fase:hover { background: var(--panel); }
+
+.fase-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--gold);
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.fase-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 42px; font-weight: 800;
+  color: rgba(255,255,255,0.08);
+  line-height: 1;
+}
+
+.fase-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 700;
+  color: #fff; margin-bottom: 12px;
+}
+
+.fase-desc {
+  font-size: 15px; color: var(--text2);
+  line-height: 1.7; margin-bottom: 16px;
+}
+
+.fase-tag {
+  display: inline-block;
+  padding: 4px 12px; border-radius: 999px;
+  font-size: 11px; font-weight: 600;
+  font-family: 'DM Mono', monospace;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.2);
+  color: var(--gold);
+}
+
+/* ── SECTORES ── */
+#sectores {
+  border-top: 1px solid var(--border);
+}
+
+.sectores-grid {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.sector-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 20px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.sector-item:hover {
+  border-color: rgba(201,168,76,0.3);
+  background: var(--panel);
+  transform: translateY(-2px);
+}
+
+.sector-icon { font-size: 28px; margin-bottom: 10px; }
+.sector-name {
+  font-size: 13px; font-weight: 600;
+  color: var(--text2);
+}
+
+/* ── POSICIONAMIENTO ── */
+#posicionamiento {
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.pos-statement {
+  margin: 56px auto 0;
+  max-width: 800px;
+}
+
+.pos-main {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 800; letter-spacing: -1.5px;
+  color: #fff; line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+.pos-main .gold { color: var(--gold); }
+.pos-main .dim { color: var(--text3); }
+
+.pos-sub {
+  font-size: 17px; color: var(--text2);
+  line-height: 1.7; max-width: 560px;
+  margin: 0 auto 48px;
+}
+
+.value-props {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px; margin-top: 48px; text-align: left;
+}
+
+.vp-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px;
+}
+
+.vp-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px; font-weight: 800;
+  color: var(--gold); line-height: 1;
+  margin-bottom: 8px;
+}
+
+.vp-desc {
+  font-size: 14px; color: var(--text2);
+  line-height: 1.6;
+}
+
+/* ── CTA ── */
+#cta {
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding-bottom: 120px;
+}
+
+.cta-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 72px 48px;
+  position: relative; overflow: hidden;
+  max-width: 760px; margin: 0 auto;
+}
+
+.cta-glow {
+  position: absolute; top: -50%; left: 50%;
+  transform: translateX(-50%);
+  width: 400px; height: 300px;
+  background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px; font-weight: 800;
+  letter-spacing: -1px; color: #fff;
+  margin-bottom: 16px;
+}
+
+.cta-sub {
+  font-size: 16px; color: var(--text2);
+  line-height: 1.7; margin-bottom: 40px;
+}
+
+.cta-form {
+  display: flex; flex-direction: column;
+  gap: 12px; max-width: 420px; margin: 0 auto;
+}
+
+.cta-form input {
+  padding: 14px 20px;
+  background: var(--black);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: 'Instrument Sans', sans-serif;
+  outline: none; transition: border 0.2s;
+  width: 100%;
+}
+.cta-form input:focus { border-color: rgba(201,168,76,0.4); }
+.cta-form input::placeholder { color: var(--text3); }
+
+.cta-form button {
+  margin-top: 8px;
+  padding: 15px 32px;
+  background: var(--gold); color: #0a0800;
+  border: none; border-radius: 10px;
+  font-weight: 700; font-size: 15px;
+  cursor: pointer; transition: all 0.2s;
+  font-family: 'Instrument Sans', sans-serif;
+}
+.cta-form button:hover { background: var(--gold2); transform: translateY(-1px); }
+
+.cta-note {
+  margin-top: 20px;
+  font-size: 12px; color: var(--text3);
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 48px;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+
+.footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 800; color: #fff;
+}
+
+.footer-text {
+  font-size: 13px; color: var(--text3);
+}
+
+.footer-links {
+  display: flex; gap: 24px; list-style: none;
+}
+.footer-links a {
+  font-size: 13px; color: var(--text3);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--text2); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+  section { padding: 64px 20px; }
+  #hero { padding: 100px 20px 60px; }
+  h1 { letter-spacing: -1px; }
+  .hero-stats { flex-direction: column; }
+  .stat { border-right: none; border-bottom: 1px solid var(--border); }
+  .stat:last-child { border-bottom: none; }
+  .problema-grid { grid-template-columns: 1fr; }
+  .soluciones-grid { grid-template-columns: 1fr; }
+  .pasos { grid-template-columns: 1fr; }
+  .pasos::before { display: none; }
+  .fase { grid-template-columns: 1fr; gap: 0; }
+  .fase-num { display: none; }
+  .sectores-grid { grid-template-columns: repeat(2, 1fr); }
+  .value-props { grid-template-columns: 1fr; }
+  footer { flex-direction: column; text-align: center; }
+  .cta-box { padding: 48px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo font-display">
+    <span class="dot"></span>
+    OPERIX
+  </div>
+  <ul class="nav-links">
+    <li><a href="#soluciones">Soluciones</a></li>
+    <li><a href="#como-funciona">Cómo funciona</a></li>
+    <li><a href="#modelo">Modelo</a></li>
+    <li><a href="#sectores">Sectores</a></li>
+    <li><a href="https://web-production-3c72c.up.railway.app" target="_blank" class="nav-cta">Ver demo →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-badge font-mono">
+    Inteligencia Operativa · Colombia
+  </div>
+
+  <h1 class="font-display">
+    Menos auditoría<br>
+    <span class="accent">manual.</span><br>
+    Más <span class="accent2">control real.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Operix automatiza procesos de auditoría, validación y cumplimiento normativo mediante inteligencia operativa aplicada. Lo que antes tomaba 3 días, ahora toma menos de 2 horas.
+  </p>
+
+  <div class="hero-actions">
+    <a href="https://web-production-3c72c.up.railway.app" target="_blank" class="btn-primary">
+      Ver plataforma en vivo →
+    </a>
+    <a href="#soluciones" class="btn-secondary">
+      Explorar soluciones
+    </a>
+  </div>
+
+  <div class="hero-stats reveal">
+    <div class="stat">
+      <div class="stat-num font-display">−75%</div>
+      <div class="stat-label">tiempo operativo<br>en auditoría</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num font-display">101</div>
+      <div class="stat-label">requisitos HSE<br>evaluados con IA</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num font-display">2h</div>
+      <div class="stat-label">de análisis donde<br>antes eran 3 días</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num font-display">ISO</div>
+      <div class="stat-label">27001 · datos bajo<br>Microsoft Azure</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEMA -->
+<section id="problema">
+  <div class="reveal">
+    <div class="section-label font-mono">El problema</div>
+    <h2 class="section-title font-display">
+      El cumplimiento normativo<br>está roto operativamente
+    </h2>
+    <p class="section-sub">
+      Las empresas colombianas gastan tiempo y recursos valiosos en procesos de auditoría manuales, lentos y propensos a errores.
+    </p>
+  </div>
+
+  <div class="problema-grid reveal" style="transition-delay:0.1s">
+    <div class="problema-item">
+      <div class="problema-icon">📋</div>
+      <div class="problema-title">3 días para una preauditoría</div>
+      <div class="problema-desc">Un auditor tarda entre 2 y 5 días revisando manualmente 60 estándares de la Res. 0312, llenando formatos en Excel y consolidando hallazgos en Word.</div>
+    </div>
+    <div class="problema-item">
+      <div class="problema-icon">⚠️</div>
+      <div class="problema-title">Sanciones del Ministerio del Trabajo</div>
+      <div class="problema-desc">Las multas por incumplimiento del SG-SST van hasta 500 SMMLV. La mayoría de empresas no descubren sus brechas hasta que ya es tarde.</div>
+    </div>
+    <div class="problema-item">
+      <div class="problema-icon">📁</div>
+      <div class="problema-title">Trazabilidad documental inexistente</div>
+      <div class="problema-desc">Los hallazgos quedan dispersos en correos, carpetas compartidas y archivos sin control de versión. No hay dashboard, no hay seguimiento real.</div>
+    </div>
+    <div class="problema-item">
+      <div class="problema-icon">🤝</div>
+      <div class="problema-title">Contratistas sin validación real</div>
+      <div class="problema-desc">Validar el cumplimiento HSE de contratistas requiere revisar docenas de documentos uno a uno. La mayoría se aprueba sin verificación profunda.</div>
+    </div>
+  </div>
+
+  <div class="vs-arrow reveal">
+    <span class="vs-label font-mono">Operix cambia esto</span>
+  </div>
+</section>
+
+<!-- SOLUCIONES -->
+<section id="soluciones">
+  <div class="reveal">
+    <div class="section-label font-mono">Nuestras soluciones</div>
+    <h2 class="section-title font-display">
+      Operix SST —<br>Auditoría inteligente
+    </h2>
+    <p class="section-sub">
+      Una línea de soluciones especializadas en cumplimiento normativo y gestión HSE, diseñadas para industrias con alta exigencia regulatoria.
+    </p>
+  </div>
+
+  <div class="soluciones-grid">
+    <a href="https://web-production-3c72c.up.railway.app" target="_blank" class="solucion-card reveal" style="transition-delay:0.0s">
+      <div class="card-num font-mono">01 — ACTIVO</div>
+      <div class="card-icon">🏭</div>
+      <div class="card-title font-display">AuditorSST</div>
+      <div class="card-norm font-mono">Res. 0312 / Decreto 1072</div>
+      <div class="card-desc">Evaluación automatizada del SG-SST frente a los 60 estándares mínimos obligatorios. La IA analiza el contexto de la empresa y prellenan el checklist completo.</div>
+      <ul class="card-features">
+        <li>Evaluación de 60 estándares con IA</li>
+        <li>Filtro por Art. 3, 9 o 16 según tamaño</li>
+        <li>Análisis de documentos adjuntos</li>
+        <li>Informe PDF + Excel ejecutivo</li>
+        <li>Dictado de contexto por voz</li>
+      </ul>
+      <div class="card-badge badge-live font-mono">En producción</div>
+    </a>
+
+    <a href="https://web-production-3c72c.up.railway.app" target="_blank" class="solucion-card reveal" style="transition-delay:0.1s">
+      <div class="card-num font-mono">02 — ACTIVO</div>
+      <div class="card-icon">🤝</div>
+      <div class="card-title font-display">Evaluación Contratistas HSE</div>
+      <div class="card-norm font-mono">ISO 45001 / Decreto 1072 / Res. 0312</div>
+      <div class="card-desc">Validación HSE de contratistas y proveedores frente a 101 requisitos organizados en 8 componentes. Ideal para oil & gas, construcción y manufactura.</div>
+      <ul class="card-features">
+        <li>101 requisitos en 8 componentes A–H</li>
+        <li>Score de cumplimiento por componente</li>
+        <li>Gestión de evidencias y adjuntos</li>
+        <li>Identificación de no conformidades</li>
+        <li>Plan de mejoramiento automático</li>
+      </ul>
+      <div class="card-badge badge-live font-mono">En producción</div>
+    </a>
+
+    <div class="solucion-card coming-soon reveal" style="transition-delay:0.2s">
+      <div class="card-num font-mono">03 — PRÓXIMO</div>
+      <div class="card-icon">🌐</div>
+      <div class="card-title font-display">ISO 45001:2018</div>
+      <div class="card-norm font-mono">Auditoría de certificación</div>
+      <div class="card-desc">Evaluación completa del sistema de gestión frente al estándar internacional ISO 45001. Para empresas que buscan certificación o mantenimiento del sistema.</div>
+      <ul class="card-features">
+        <li>Evaluación por cláusulas ISO 45001</li>
+        <li>Análisis de brechas para certificación</li>
+        <li>Integración con SG-SST colombiano</li>
+        <li>Roadmap de implementación con IA</li>
+      </ul>
+      <div class="card-badge badge-soon font-mono">En desarrollo</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona">
+  <div class="reveal">
+    <div class="section-label font-mono">Proceso</div>
+    <h2 class="section-title font-display">
+      3 pasos. 2 horas.<br>Informe ejecutivo listo.
+    </h2>
+  </div>
+
+  <div class="pasos reveal">
+    <div class="paso">
+      <div class="paso-num font-display">1</div>
+      <div class="paso-icon">🎙</div>
+      <div class="paso-title font-display">Describe el contexto</div>
+      <div class="paso-desc">Escribe o dicta por voz el estado de la empresa o contratista. Adjunta documentos existentes — matrices, planes, certificados, actas.</div>
+    </div>
+    <div class="paso">
+      <div class="paso-num font-display">2</div>
+      <div class="paso-icon">🤖</div>
+      <div class="paso-title font-display">La IA analiza y evalúa</div>
+      <div class="paso-desc">Azure OpenAI procesa el contexto y los documentos bajo confidencialidad garantizada. Prellenan automáticamente el checklist normativo completo.</div>
+    </div>
+    <div class="paso">
+      <div class="paso-num font-display">3</div>
+      <div class="paso-icon">📄</div>
+      <div class="paso-title font-display">Descarga el informe</div>
+      <div class="paso-desc">Informe PDF ejecutivo de 7 páginas + Excel técnico de 5 hojas. Hallazgos, score, plan de mejoramiento y evidencias organizadas por requisito.</div>
+    </div>
+  </div>
+</section>
+
+<!-- MODELO -->
+<section id="modelo">
+  <div class="reveal">
+    <div class="section-label font-mono">Modelo de trabajo</div>
+    <h2 class="section-title font-display">
+      Comenzamos con resultados,<br>escalamos con plataforma.
+    </h2>
+    <p class="section-sub">
+      No obligamos a comprar software. Primero demostramos valor con el servicio, luego habilitamos la plataforma para operación continua.
+    </p>
+  </div>
+
+  <div class="fases reveal">
+    <div class="fase">
+      <div>
+        <div class="fase-label font-mono">Fase 1</div>
+        <div class="fase-num font-display">01</div>
+      </div>
+      <div>
+        <div class="fase-title font-display">Servicio Premium</div>
+        <div class="fase-desc">Operix ejecuta la auditoría inteligente por el cliente. El equipo Operix ingresa, analiza, genera el informe y entrega los hallazgos con el plan de mejoramiento. No vendemos plataforma — vendemos resultados medibles.</div>
+        <span class="fase-tag font-mono">Consultoría · Pago por proyecto</span>
+      </div>
+    </div>
+    <div class="fase">
+      <div>
+        <div class="fase-label font-mono">Fase 2</div>
+        <div class="fase-num font-display">02</div>
+      </div>
+      <div>
+        <div class="fase-title font-display">Modelo Híbrido</div>
+        <div class="fase-desc">Además del servicio, implementamos la plataforma para que el equipo del cliente opere de forma autónoma. Capacitación incluida, soporte continuo, y Operix como respaldo técnico para auditorías complejas.</div>
+        <span class="fase-tag font-mono">Setup único + Mensualidad</span>
+      </div>
+    </div>
+    <div class="fase">
+      <div>
+        <div class="fase-label font-mono">Fase 3</div>
+        <div class="fase-num font-display">03</div>
+      </div>
+      <div>
+        <div class="fase-title font-display">Plataforma Enterprise</div>
+        <div class="fase-desc">Sistema SaaS robusto de cumplimiento, auditoría y control empresarial. Multi-usuario, multi-sede, integración con sistemas existentes. Para empresas con operación a escala que necesitan un centro de control normativo.</div>
+        <span class="fase-tag font-mono">SaaS Enterprise · Licencia anual</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTORES -->
+<section id="sectores">
+  <div class="reveal">
+    <div class="section-label font-mono">Sectores</div>
+    <h2 class="section-title font-display">
+      Para cualquier industria con<br>obligaciones regulatorias.
+    </h2>
+  </div>
+
+  <div class="sectores-grid reveal">
+    <div class="sector-item"><div class="sector-icon">⛽</div><div class="sector-name">Oil & Gas</div></div>
+    <div class="sector-item"><div class="sector-icon">🏗</div><div class="sector-name">Construcción</div></div>
+    <div class="sector-item"><div class="sector-icon">🏭</div><div class="sector-name">Manufactura</div></div>
+    <div class="sector-item"><div class="sector-icon">🚛</div><div class="sector-name">Logística</div></div>
+    <div class="sector-item"><div class="sector-icon">⚡</div><div class="sector-name">Energía</div></div>
+    <div class="sector-item"><div class="sector-icon">⛏</div><div class="sector-name">Minería</div></div>
+    <div class="sector-item"><div class="sector-icon">🍃</div><div class="sector-name">Alimentos</div></div>
+    <div class="sector-item"><div class="sector-icon">🏢</div><div class="sector-name">Retail Industrial</div></div>
+    <div class="sector-item"><div class="sector-icon">💧</div><div class="sector-name">Utilities</div></div>
+    <div class="sector-item"><div class="sector-icon">📦</div><div class="sector-name">Contratistas</div></div>
+  </div>
+</section>
+
+<!-- POSICIONAMIENTO -->
+<section id="posicionamiento">
+  <div class="reveal">
+    <div class="section-label font-mono">Por qué Operix</div>
+  </div>
+
+  <div class="pos-statement reveal">
+    <div class="pos-main font-display">
+      <span class="dim">No vendemos</span> inteligencia artificial.<br>
+      Vendemos <span class="gold">reducción de riesgo.</span>
+    </div>
+    <p class="pos-sub">
+      El cumplimiento normativo es una obligación legal con consecuencias reales. Operix convierte esa obligación en una ventaja competitiva medible.
+    </p>
+  </div>
+
+  <div class="value-props reveal">
+    <div class="vp-item">
+      <div class="vp-num font-display">3→2h</div>
+      <div class="vp-desc">Reducción de días de trabajo a horas. El mismo rigor técnico en una fracción del tiempo.</div>
+    </div>
+    <div class="vp-item">
+      <div class="vp-num font-display">ISO</div>
+      <div class="vp-desc">Datos procesados bajo Microsoft Azure con ISO 27001, SOC 2 y DPA firmado. Confidencialidad garantizada contractualmente.</div>
+    </div>
+    <div class="vp-item">
+      <div class="vp-num font-display">0+</div>
+      <div class="vp-desc">Cero instalación, cero configuración, cero IT requerido. El auditor accede desde cualquier navegador en cualquier dispositivo.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-box reveal">
+    <div class="cta-glow"></div>
+    <div class="section-label font-mono" style="justify-content:center;display:flex">Comenzar</div>
+    <h2 class="cta-title font-display">
+      Solicita tu demo gratuita
+    </h2>
+    <p class="cta-sub">
+      Te mostramos la plataforma en vivo con un caso real de tu sector. Sin compromiso, sin instalación. Solo 30 minutos.
+    </p>
+    <form class="cta-form" onsubmit="handleSubmit(event)">
+      <input type="text" placeholder="Nombre completo" required id="nombre">
+      <input type="text" placeholder="Empresa" required id="empresa">
+      <input type="tel" placeholder="WhatsApp (+57...)" required id="whatsapp">
+      <input type="text" placeholder="Sector / industria" id="sector">
+      <button type="submit">Solicitar demo →</button>
+    </form>
+    <p class="cta-note">También puedes acceder directamente a la plataforma: <a href="https://web-production-3c72c.up.railway.app" target="_blank" style="color:var(--gold);text-decoration:none">web-production-3c72c.up.railway.app →</a></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo font-display">OPERIX</div>
+  <p class="footer-text">© 2026 Operix · Inteligencia Operativa para la Industria Colombiana</p>
+  <ul class="footer-links">
+    <li><a href="#soluciones">Soluciones</a></li>
+    <li><a href="#modelo">Modelo</a></li>
+    <li><a href="https://web-production-3c72c.up.railway.app" target="_blank">Plataforma</a></li>
+  </ul>
+</footer>
+
+<script>
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 60);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── FORM SUBMIT ──
+function handleSubmit(e) {
+  e.preventDefault();
+  const nombre   = document.getElementById('nombre').value;
+  const empresa  = document.getElementById('empresa').value;
+  const whatsapp = document.getElementById('whatsapp').value;
+  const sector   = document.getElementById('sector').value;
+
+  const msg = encodeURIComponent(
+    `Hola, soy ${nombre} de ${empresa} (${sector}). Quiero solicitar una demo de Operix. Mi WhatsApp es ${whatsapp}.`
+  );
+  window.open(`https://wa.me/573159831599?text=${msg}`, '_blank');
+}
+
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

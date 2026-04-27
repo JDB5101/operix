@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operix · Simulador Financiero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:#070a0e; --surface:#0d1117; --panel:#111820;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+  --gold:#c9a84c; --gold2:#e8c97a;
+  --green:#4ade80; --red:#f87171; --indigo:#818cf8;
+  --text:#e2e8f0; --text2:#94a3b8; --text3:#64748b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Instrument Sans',sans-serif;background:var(--black);color:var(--text);min-height:100vh}
+.mono{font-family:'DM Mono',monospace}
+.display{font-family:'Syne',sans-serif}
+
+/* LOGIN */
+#login{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;padding:20px;
+}
+.login-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:48px;width:100%;max-width:400px;text-align:center;
+}
+.login-logo{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:8px}
+.login-sub{font-size:13px;color:var(--text3);margin-bottom:32px;font-family:'DM Mono',monospace;letter-spacing:1px}
+.login-input{
+  width:100%;padding:13px 18px;background:var(--black);
+  border:1px solid var(--border2);border-radius:10px;
+  color:var(--text);font-size:15px;font-family:'Instrument Sans',sans-serif;
+  outline:none;margin-bottom:12px;transition:border 0.2s;
+}
+.login-input:focus{border-color:rgba(201,168,76,0.4)}
+.login-btn{
+  width:100%;padding:13px;background:var(--gold);color:#0a0800;
+  border:none;border-radius:10px;font-weight:700;font-size:15px;
+  cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all 0.2s;
+}
+.login-btn:hover{background:var(--gold2);transform:translateY(-1px)}
+.login-error{color:var(--red);font-size:13px;margin-top:10px;display:none}
+
+/* APP */
+#app{display:none}
+
+/* HEADER */
+header{
+  background:rgba(13,17,23,0.95);border-bottom:1px solid var(--border);
+  padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:10;
+}
+.logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block}
+.badge{padding:4px 12px;border-radius:999px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);color:var(--gold);font-size:11px;font-weight:600;letter-spacing:1px;font-family:'DM Mono',monospace}
+.logout-btn{background:none;border:1px solid var(--border);color:var(--text3);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;transition:all 0.2s}
+.logout-btn:hover{border-color:var(--border2);color:var(--text)}
+
+/* TABS */
+.tabs{display:flex;gap:4px;padding:20px 32px 0;border-bottom:1px solid var(--border)}
+.tab-btn{
+  padding:10px 20px;border-radius:8px 8px 0 0;border:none;
+  background:transparent;color:var(--text3);font-weight:400;font-size:13px;
+  cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;
+  font-family:'Instrument Sans',sans-serif;
+}
+.tab-btn.active{background:rgba(255,255,255,0.06);color:#fff;font-weight:600;border-bottom-color:var(--gold)}
+
+/* BODY */
+.body{padding:28px 32px;max-width:1140px;margin:0 auto}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px}
+.card-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:16px;font-family:'DM Mono',monospace}
+
+/* FORM ELEMENTS */
+label{font-size:13px;color:var(--text2);font-weight:500;display:block;margin-bottom:6px}
+select,input[type=range]{width:100%;margin-bottom:16px}
+select{
+  padding:10px 14px;background:#111820;border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;color:var(--text);font-size:14px;outline:none;
+  font-family:'Instrument Sans',sans-serif;
+}
+input[type=range]{accent-color:var(--gold)}
+.toggle{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border-radius:8px;cursor:pointer;margin-bottom:8px;transition:all 0.2s;
+  border:1px solid var(--border);background:rgba(255,255,255,0.02);
+}
+.toggle.on{background:rgba(201,168,76,0.08);border-color:rgba(201,168,76,0.3)}
+.toggle-text strong{font-size:13px;font-weight:600;color:var(--text);display:block}
+.toggle-text span{font-size:11px;color:var(--text3)}
+.divider{height:1px;background:rgba(255,255,255,0.06);margin:18px 0}
+
+/* METRICS */
+.metric-big{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;line-height:1;margin-bottom:4px}
+.metric-label{font-size:12px;color:var(--text3);line-height:1.4}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;font-family:'DM Mono',monospace}
+.row-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
+.row-item:last-child{border-bottom:none}
+.row-label{color:var(--text2)}
+.row-val{color:var(--text);font-weight:600}
+
+/* GRIDS */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center}
+
+/* INFO BOX */
+.info-box{padding:14px 16px;border-radius:10px;font-size:13px;color:var(--text2);line-height:1.6;margin-top:12px}
+
+/* TABLA */
+.table-header{display:grid;padding:14px 20px;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;font-family:'DM Mono',monospace}
+.table-row{display:grid;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.2s}
+.table-row:hover{background:rgba(255,255,255,0.02)}
+.table-row:last-child{border-bottom:none}
+
+/* FASES */
+.fase{display:grid;grid-template-columns:180px 1fr;gap:40px;align-items:start;padding:32px 40px;border-bottom:1px solid var(--border);transition:background 0.2s}
+.fase:hover{background:var(--panel)}
+.fase:last-child{border-bottom:none}
+.fase-num{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:rgba(255,255,255,0.06);line-height:1}
+.fase-tag{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:600;font-family:'DM Mono',monospace;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);color:var(--gold);margin-top:12px}
+
+/* FLUJO */
+.flujo{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:center;margin-bottom:28px}
+.flujo-arrow{font-size:24px;color:var(--text3);text-align:center}
+.flujo-card{border-radius:14px;padding:20px}
+.regla{padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.regla:last-child{border-bottom:none}
+.regla strong{display:block;font-size:14px;color:var(--text);margin-bottom:6px}
+.regla p{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .tabs{padding:12px 16px 0;overflow-x:auto}
+  .body{padding:20px 16px}
+  .grid2,.grid3,.grid4{grid-template-columns:1fr}
+  .flujo{grid-template-columns:1fr;gap:8px}
+  .flujo-arrow{display:none}
+  .fase{grid-template-columns:1fr;gap:0}
+  .fase-num{display:none}
+  header{padding:14px 16px}
+  .badge{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <div class="login-logo display">OPERIX</div>
+    <div class="login-sub mono">SIMULADOR FINANCIERO · INTERNO</div>
+    <input class="login-input" type="password" id="pwd-input" placeholder="Contraseña de acceso" onkeydown="if(event.key==='Enter')checkPwd()">
+    <button class="login-btn" onclick="checkPwd()">Acceder →</button>
+    <div class="login-error" id="login-error">Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="logo display">
+      <span class="logo-dot"></span>
+      OPERIX
+    </div>
+    <span class="badge mono">SIMULADOR FINANCIERO — USO INTERNO</span>
+    <button class="logout-btn" onclick="logout()">🔒 Cerrar sesión</button>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="setTab('simulador',this)">⚡ Simulador</button>
+    <button class="tab-btn" onclick="setTab('tabla',this)">📋 Tabla de precios</button>
+    <button class="tab-btn" onclick="setTab('estructura',this)">🏗 Estructura del modelo</button>
+  </div>
+
+  <div class="body">
+
+    <!-- TAB SIMULADOR -->
+    <div id="tab-simulador">
+      <div style="display:grid;grid-template-columns:360px 1fr;gap:24px">
+
+        <!-- CONTROLES -->
+        <div class="card">
+          <div class="card-title">Parámetros</div>
+
+          <label>Servicio</label>
+          <select id="sel-servicio" onchange="calcular()">
+            <option value="auditor_sst">🏭 AuditorSST — Res. 0312</option>
+            <option value="contratistas">🤝 Evaluación Contratistas HSE</option>
+            <option value="iso">🌐 ISO 45001:2018</option>
+          </select>
+
+          <label>Tamaño del cliente final</label>
+          <select id="sel-tamano" onchange="calcular()">
+            <option value="0.8">Micro / Pequeña (≤50 empleados)</option>
+            <option value="1.0" selected>Mediana (51–200 empleados)</option>
+            <option value="1.4">Grande (201–500 empleados)</option>
+            <option value="1.8">Corporativa (500+ empleados)</option>
+          </select>
+
+          <label>Auditorías al mes: <strong id="vol-label" style="color:var(--gold)">10</strong> <span id="mensualidad-tag" style="color:var(--indigo);font-size:11px;display:none">→ Mensualidad</span></label>
+          <input type="range" id="rng-vol" min="1" max="40" value="10" oninput="calcular()">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:18px">
+            <span>1</span><span style="color:var(--gold)">15 ← umbral</span><span>40</span>
+          </div>
+
+          <label>Opciones de análisis</label>
+          <div class="toggle on" id="tog-docs" onclick="toggleDocs()">
+            <span id="chk-docs">✅</span>
+            <div class="toggle-text">
+              <strong>Con documentos adjuntos</strong>
+              <span>PDFs, Excel, matrices (+$1.134 COP/análisis)</span>
+            </div>
+          </div>
+          <div class="toggle" id="tog-voz" onclick="toggleVoz()">
+            <span id="chk-voz">⬜</span>
+            <div class="toggle-text">
+              <strong>Con dictado de voz (Whisper)</strong>
+              <span>+$294 COP/análisis</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <label>Modalidad de cobro</label>
+          <select id="sel-modalidad" onchange="calcular()">
+            <option value="auto">🤖 Automático (recomendado)</option>
+            <option value="ppu">💳 Pay-per-use</option>
+            <option value="men">📅 Mensualidad fija</option>
+          </select>
+        </div>
+
+        <!-- RESULTADOS -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+
+          <!-- MODALIDAD ACTIVA -->
+          <div class="card" id="card-modalidad" style="border-color:rgba(74,222,128,0.3)">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+              <div class="card-title">Modalidad activa</div>
+              <span class="chip mono" id="chip-modalidad" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);color:var(--green)">💳 PAY-PER-USE</span>
+            </div>
+            <div class="grid3">
+              <div>
+                <div class="metric-big display" id="m-precio" style="color:var(--gold)">$95.000</div>
+                <div class="metric-label" id="m-precio-label">por auditoría</div>
+              </div>
+              <div>
+                <div class="metric-big display" id="m-ingreso" style="color:var(--green)">$950.000</div>
+                <div class="metric-label">ingreso Operix / mes</div>
+              </div>
+              <div>
+                <div class="metric-big display" id="m-margen-pct" style="color:var(--gold)">72%</div>
+                <div class="metric-label">margen neto Operix</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid2">
+            <!-- COSTOS OPERIX -->
+            <div class="card">
+              <div class="card-title">🔧 Costos Operix / mes</div>
+              <div class="row-item"><span class="row-label" id="lbl-ia">IA × 10</span><span class="row-val" id="val-ia">$11.340</span></div>
+              <div class="row-item"><span class="row-label">Railway (servidor)</span><span class="row-val">$21.000</span></div>
+              <div class="row-item"><span class="row-label" style="font-weight:700;color:var(--text)">Total costos</span><span class="row-val" style="color:var(--red)" id="val-costo-total">$32.340</span></div>
+              <div class="divider"></div>
+              <div class="row-item"><span class="row-label">Ingreso Operix</span><span class="row-val" style="color:var(--green)" id="val-ingreso2">$950.000</span></div>
+              <div class="row-item" style="border:none"><span class="row-label" style="font-weight:700;color:var(--gold)">Margen neto</span><span class="row-val" style="color:var(--gold)" id="val-margen-neto">$917.660</span></div>
+            </div>
+
+            <!-- SYSTEM -->
+            <div class="card">
+              <div class="card-title">🏢 Rentabilidad System / mes</div>
+              <div class="row-item"><span class="row-label">Precio al cliente final</span><span class="row-val" id="val-precio-system">$950.000</span></div>
+              <div class="row-item"><span class="row-label" id="lbl-system-tot">Ingresos × 10</span><span class="row-val" id="val-system-tot">$9.500.000</span></div>
+              <div class="row-item"><span class="row-label">Costo Operix</span><span class="row-val" style="color:var(--red)" id="val-costo-system">−$950.000</span></div>
+              <div class="row-item" style="border:none"><span class="row-label" style="font-weight:700;color:var(--green)">Margen System</span><span class="row-val" style="color:var(--green)" id="val-margen-system">$8.550.000</span></div>
+              <div class="divider"></div>
+              <div style="text-align:center">
+                <div class="metric-big display" id="val-margen-system-pct" style="color:var(--green)">90%</div>
+                <div class="metric-label">margen bruto System</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TIEMPO -->
+          <div class="card">
+            <div class="card-title">⏱ Impacto operativo para System</div>
+            <div class="grid4">
+              <div><div class="metric-big display" id="val-h-antes" style="color:var(--red);font-size:26px">80h</div><div class="metric-label">horas antes (manual)</div></div>
+              <div><div class="metric-big display" id="val-h-con" style="color:var(--green);font-size:26px">20h</div><div class="metric-label">horas con Operix</div></div>
+              <div><div class="metric-big display" id="val-h-ah" style="color:var(--gold);font-size:26px">60h</div><div class="metric-label">horas liberadas</div></div>
+              <div><div class="metric-big display" id="val-aud-extra" style="color:var(--indigo);font-size:26px">+7</div><div class="metric-label">auditorías extra posibles</div></div>
+            </div>
+            <div class="info-box" id="info-extra" style="background:rgba(129,140,248,0.06);border:1px solid rgba(129,140,248,0.2)"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB TABLA -->
+    <div id="tab-tabla" style="display:none">
+      <h2 class="display" style="font-size:26px;font-weight:800;color:#fff;margin-bottom:8px">Tabla de precios Operix → System</h2>
+      <p style="color:var(--text2);font-size:15px;margin-bottom:28px">Precios que Operix cobra a System Integral Group por uso de la plataforma.</p>
+
+      <div class="card" style="padding:0;overflow:hidden">
+        <div class="table-header" style="grid-template-columns:2fr 1fr 1.2fr 1.2fr">
+          <span>Volumen mensual</span><span>Modelo</span><span>Precio</span><span>Total aprox./mes</span>
+        </div>
+        <div id="tabla-precios"></div>
+      </div>
+
+      <div class="info-box" style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);margin-top:20px">
+        <strong style="color:var(--gold);display:block;margin-bottom:8px">💡 Lógica del modelo</strong>
+        Por debajo de <strong style="color:#fff">15 auditorías/mes</strong>, System paga por uso — si no usa, no paga.<br>
+        Desde 15 en adelante, la mensualidad conviene más a los dos: System tiene previsibilidad de costos y Operix tiene ingreso recurrente garantizado.
+      </div>
+
+      <div class="info-box" style="background:rgba(129,140,248,0.06);border:1px solid rgba(129,140,248,0.2);margin-top:12px">
+        <strong style="color:var(--indigo);display:block;margin-bottom:14px">🎯 Precios System → Cliente final (referencia)</strong>
+        <div class="grid3" id="precios-system"></div>
+      </div>
+    </div>
+
+    <!-- TAB ESTRUCTURA -->
+    <div id="tab-estructura" style="display:none">
+      <h2 class="display" style="font-size:26px;font-weight:800;color:#fff;margin-bottom:8px">Estructura del modelo</h2>
+      <p style="color:var(--text2);font-size:15px;margin-bottom:28px">Cómo fluye el valor y el dinero entre Operix, System y los clientes.</p>
+
+      <div class="flujo">
+        <div class="flujo-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(148,163,184,0.2)">
+          <div style="font-weight:800;color:var(--text2);font-size:15px;margin-bottom:4px">Clientes finales</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:14px">Empresas colombianas</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.8">→ Pagan por auditoría<br>→ Reciben PDF + Excel<br>→ Cumplen ante el Ministerio</div>
+        </div>
+        <div class="flujo-arrow">→</div>
+        <div class="flujo-card" style="background:rgba(74,222,128,0.04);border:1px solid rgba(74,222,128,0.2)">
+          <div style="font-weight:800;color:var(--green);font-size:15px;margin-bottom:4px">System Integral Group</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:14px">Empresa familiar · Auditorías</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.8">→ Ejecuta la auditoría<br>→ Usa Operix como herramienta<br>→ Cobra al cliente final<br>→ Paga licencia a Operix</div>
+        </div>
+        <div class="flujo-arrow">→</div>
+        <div class="flujo-card" style="background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.2)">
+          <div style="font-weight:800;color:var(--gold);font-size:15px;margin-bottom:4px">Operix</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:14px">Juan David · Tecnología</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.8">→ Desarrolla y mantiene<br>→ Cobra licencia a System<br>→ Paga Azure + Railway<br>→ Retiene el margen</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:20px">
+        <div style="padding:20px 32px;border-bottom:1px solid var(--border)">
+          <div class="card-title">Reglas del acuerdo Operix ↔ System</div>
+        </div>
+        <div style="padding:0 32px">
+          <div class="regla"><strong>Herramienta exclusiva</strong><p>System tiene acceso exclusivo a Operix SST durante la fase inicial. No se vende a competidores directos de System sin previo acuerdo.</p></div>
+          <div class="regla"><strong>Confidencialidad de clientes</strong><p>Los datos de los clientes de System procesados en Operix están cubiertos por el NDA firmado entre las partes.</p></div>
+          <div class="regla"><strong>Soporte incluido</strong><p>Operix incluye soporte técnico, actualizaciones de normativa y nuevas funciones sin costo adicional durante la Fase 1.</p></div>
+          <div class="regla"><strong>Revisión de precios</strong><p>Los precios se revisan cada 6 meses. Operix notifica con 30 días de anticipación cualquier cambio de tarifa.</p></div>
+          <div class="regla"><strong>Facturación</strong><p>Operix factura a System los primeros 5 días de cada mes. Pay-per-use se liquida con el conteo del mes anterior.</p></div>
+          <div class="regla"><strong>Escalamiento</strong><p>Si System supera 40 auditorías/mes de forma consistente, se negocia un acuerdo Enterprise con precio especial.</p></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── AUTH ──────────────────────────────────────────────────────────────────
+const PWD = "operix2026";
+function checkPwd(){
+  const v = document.getElementById('pwd-input').value;
+  if(v === PWD){
+    sessionStorage.setItem('operix_auth','1');
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').style.display='block';
+    calcular(); renderTabla(); renderSistema();
+  } else {
+    document.getElementById('login-error').style.display='block';
+  }
+}
+function logout(){
+  sessionStorage.removeItem('operix_auth');
+  document.getElementById('login').style.display='flex';
+  document.getElementById('app').style.display='none';
+  document.getElementById('pwd-input').value='';
+}
+if(sessionStorage.getItem('operix_auth')==='1'){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='block';
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────
+function setTab(id, btn){
+  ['simulador','tabla','estructura'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = t===id ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(id==='tabla') renderTabla();
+}
+
+// ── CONSTANTS ────────────────────────────────────────────────────────────
+const TRM = 4200;
+const RAILWAY_MES = 5 * TRM;
+const SERVICIOS = {
+  auditor_sst: { nombre:'AuditorSST', icono:'🏭', norma:'Res. 0312 / Decreto 1072', precio:950000 },
+  contratistas: { nombre:'Evaluación Contratistas HSE', icono:'🤝', norma:'ISO 45001 / Dec. 1072', precio:750000 },
+  iso: { nombre:'ISO 45001:2018', icono:'🌐', norma:'ISO 45001', precio:1400000 },
+};
+
+let conDocs = true, conVoz = false;
+
+function toggleDocs(){
+  conDocs = !conDocs;
+  document.getElementById('tog-docs').className = 'toggle' + (conDocs?' on':'');
+  document.getElementById('chk-docs').textContent = conDocs ? '✅' : '⬜';
+  calcular();
+}
+function toggleVoz(){
+  conVoz = !conVoz;
+  document.getElementById('tog-voz').className = 'toggle' + (conVoz?' on':'');
+  document.getElementById('chk-voz').textContent = conVoz ? '✅' : '⬜';
+  calcular();
+}
+
+function fmt(n){ return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(Math.round(n)); }
+
+function precioUnitario(vol){
+  if(vol<=5)  return 120000;
+  if(vol<=10) return 95000;
+  if(vol<=14) return 80000;
+  return null; // mensualidad
+}
+function mensualidad(vol){
+  if(vol<=20) return 1200000;
+  if(vol<=35) return 1800000;
+  return 2400000;
+}
+
+function calcular(){
+  const vol = parseInt(document.getElementById('rng-vol').value);
+  const tamMult = parseFloat(document.getElementById('sel-tamano').value);
+  const srv = SERVICIOS[document.getElementById('sel-servicio').value];
+  const mod = document.getElementById('sel-modalidad').value;
+
+  document.getElementById('vol-label').textContent = vol;
+  const showMen = vol >= 15;
+  document.getElementById('mensualidad-tag').style.display = showMen ? 'inline' : 'none';
+
+  // Costos IA
+  const costo_ia_unit = ((conDocs ? 0.27 : 0.07) + (conVoz ? 0.07 : 0)) * TRM;
+  const costo_ia_mes  = costo_ia_unit * vol;
+  const costo_total_mes = costo_ia_mes + RAILWAY_MES;
+
+  // Modalidad real
+  const ppu = precioUnitario(vol);
+  let modalidad_real = mod;
+  if(mod==='auto') modalidad_real = (vol>=15) ? 'men' : 'ppu';
+
+  const ingreso_operix = modalidad_real==='men' ? mensualidad(vol) : (ppu * vol);
+  const margen_operix  = ingreso_operix - costo_total_mes;
+  const margen_pct     = Math.round((margen_operix / ingreso_operix) * 100);
+
+  // System
+  const precio_system = Math.round(srv.precio * tamMult);
+  const ingreso_system = precio_system * vol;
+  const margen_system  = ingreso_system - ingreso_operix;
+  const margen_sys_pct = Math.round((margen_system / ingreso_system) * 100);
+
+  // Tiempo
+  const h_antes  = vol * 8;
+  const h_con    = vol * 2;
+  const h_ah     = h_antes - h_con;
+  const aud_extra = Math.floor(h_ah / 8);
+
+  // Actualizar UI
+  document.getElementById('m-precio').textContent = modalidad_real==='men' ? fmt(mensualidad(vol)) : fmt(ppu);
+  document.getElementById('m-precio-label').textContent = modalidad_real==='men' ? 'por mes (fijo)' : 'por auditoría';
+  document.getElementById('m-ingreso').textContent = fmt(ingreso_operix);
+  document.getElementById('m-margen-pct').textContent = margen_pct + '%';
+  document.getElementById('m-margen-pct').style.color = margen_pct>60 ? 'var(--green)' : 'var(--gold)';
+
+  const chip = document.getElementById('chip-modalidad');
+  const cardMod = document.getElementById('card-modalidad');
+  if(modalidad_real==='men'){
+    chip.textContent = '📅 MENSUALIDAD';
+    chip.style.cssText = 'background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);color:var(--gold)';
+    cardMod.style.borderColor = 'rgba(201,168,76,0.3)';
+  } else {
+    chip.textContent = '💳 PAY-PER-USE';
+    chip.style.cssText = 'background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);color:var(--green)';
+    cardMod.style.borderColor = 'rgba(74,222,128,0.3)';
+  }
+
+  document.getElementById('lbl-ia').textContent = `IA × ${vol}`;
+  document.getElementById('val-ia').textContent = fmt(costo_ia_mes);
+  document.getElementById('val-costo-total').textContent = fmt(costo_total_mes);
+  document.getElementById('val-ingreso2').textContent = fmt(ingreso_operix);
+  document.getElementById('val-margen-neto').textContent = fmt(margen_operix);
+
+  document.getElementById('val-precio-system').textContent = fmt(precio_system);
+  document.getElementById('lbl-system-tot').textContent = `Ingresos × ${vol}`;
+  document.getElementById('val-system-tot').textContent = fmt(ingreso_system);
+  document.getElementById('val-costo-system').textContent = '−' + fmt(ingreso_operix);
+  document.getElementById('val-margen-system').textContent = fmt(margen_system);
+  document.getElementById('val-margen-system-pct').textContent = margen_sys_pct + '%';
+
+  document.getElementById('val-h-antes').textContent = h_antes + 'h';
+  document.getElementById('val-h-con').textContent = h_con + 'h';
+  document.getElementById('val-h-ah').textContent = h_ah + 'h';
+  document.getElementById('val-aud-extra').textContent = '+' + aud_extra;
+
+  const infoEl = document.getElementById('info-extra');
+  if(aud_extra > 0){
+    infoEl.innerHTML = `💡 Con las <strong style="color:var(--gold)">${h_ah} horas liberadas</strong>, System podría hacer <strong style="color:var(--indigo)">${aud_extra} auditorías adicionales</strong> generando <strong style="color:var(--green)">${fmt(aud_extra * precio_system)}</strong> de ingreso extra al mes sin contratar más personas.`;
+    infoEl.style.display = 'block';
+  } else {
+    infoEl.style.display = 'none';
+  }
+}
+
+// ── TABLA ─────────────────────────────────────────────────────────────────
+function renderTabla(){
+  const rows = [
+    { rango:'1 – 5 auditorías/mes',   modelo:'Pay-per-use',  precio:'$120.000 c/u',   total:'$120.000 – $600.000',  color:'#4ade80' },
+    { rango:'6 – 10 auditorías/mes',  modelo:'Pay-per-use',  precio:'$95.000 c/u',    total:'$570.000 – $950.000',  color:'#4ade80' },
+    { rango:'11 – 14 auditorías/mes', modelo:'Pay-per-use',  precio:'$80.000 c/u',    total:'$880.000 – $1.120.000',color:'#fbbf24' },
+    { rango:'15 – 20 auditorías/mes', modelo:'Mensualidad',  precio:'$1.200.000/mes', total:'$1.200.000',            color:'#c9a84c' },
+    { rango:'21 – 35 auditorías/mes', modelo:'Mensualidad',  precio:'$1.800.000/mes', total:'$1.800.000',            color:'#c9a84c' },
+    { rango:'36+ auditorías/mes',     modelo:'Enterprise',   precio:'$2.400.000/mes', total:'$2.400.000',            color:'#818cf8' },
+  ];
+  document.getElementById('tabla-precios').innerHTML = rows.map((r,i)=>`
+    <div class="table-row" style="grid-template-columns:2fr 1fr 1.2fr 1.2fr;background:${i%2===0?'transparent':'rgba(255,255,255,0.01)'}">
+      <span style="font-weight:600;color:var(--text)">${r.rango}</span>
+      <span><span class="chip mono" style="background:${r.color}15;border:1px solid ${r.color}30;color:${r.color}">${r.modelo}</span></span>
+      <span style="font-weight:700;color:${r.color};font-size:15px">${r.precio}</span>
+      <span style="color:var(--text2)">${r.total}</span>
+    </div>
+  `).join('');
+}
+
+function renderSistema(){
+  const tamanos = [
+    {label:'Micro / Pequeña', mult:0.8},
+    {label:'Mediana',         mult:1.0},
+    {label:'Grande',          mult:1.4},
+    {label:'Corporativa',     mult:1.8},
+  ];
+  document.getElementById('precios-system').innerHTML = Object.entries(SERVICIOS).map(([k,v])=>`
+    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:16px">
+      <div style="font-size:22px;margin-bottom:6px">${v.icono}</div>
+      <div style="font-weight:700;color:var(--text);font-size:14px;margin-bottom:4px">${v.nombre}</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:12px;font-family:'DM Mono',monospace">${v.norma}</div>
+      ${tamanos.map(t=>`
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
+          <span style="color:var(--text2)">${t.label}</span>
+          <span style="color:var(--gold);font-weight:600">${fmt(Math.round(v.precio*t.mult))}</span>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+// Init
+window.addEventListener('load', ()=>{
+  if(sessionStorage.getItem('operix_auth')==='1'){
+    calcular(); renderTabla(); renderSistema();
+  }
+});
+document.getElementById('pwd-input').addEventListener('keydown', e=>{
+  if(e.key==='Enter') checkPwd();
+});
+</script>
+</body>
+</html>
