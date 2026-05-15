@@ -27,7 +27,11 @@ const NOMBRES_ALIADOS = {
   "ALIADO 53":"ALIADO 53","ALIADO 55":"ALIADO 55",
   "ALIADO 56":"ALIADO 56","ALIADO 57":"ALIADO 57",
 };
-function getNombre(id){ return NOMBRES_ALIADOS[id] || id; }
+function getNombre(id){
+  // Primero busca en nombres.js (window.NOMBRES_REAL), luego fallback inline
+  if(window.NOMBRES_REAL && window.NOMBRES_REAL[id]) return window.NOMBRES_REAL[id];
+  return NOMBRES_ALIADOS[id] || id;
+}
 </script>
 <script src="nombres.js" onerror="console.log('nombres.js no disponible, usando nombres inline')"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Satoshi:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -976,7 +980,10 @@ function renderMaquillaje(){
     </div>`).join('');
 }
 
-window.addEventListener('load',()=>{ initOverview(); });
+window.addEventListener('load',()=>{
+  // Pequeño delay para asegurar que nombres.js ya aplicó Object.assign
+  setTimeout(()=>{ initOverview(); }, 0);
+});
 </script>
 
 <!-- ══ VIEW: CULTURA HSE ════════════════════════════════ -->

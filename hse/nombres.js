@@ -3,7 +3,7 @@
 // Este archivo sobreescribe los nombres del dashboard
 // ══════════════════════════════════════════════════════════
  
-Object.assign(NOMBRES_ALIADOS, {
+window.NOMBRES_REAL = {
   "ALIADO 1":  "CONSORCIO SKF OMIA",
   "ALIADO 2":  "CONFIPETROL",
   "ALIADO 3":  "MECANICOS ASOCIADOS SAS",
@@ -53,4 +53,4 @@ Object.assign(NOMBRES_ALIADOS, {
   "ALIADO 55": "OMC INGENIERIA INTEGRAL S.A.S. ESP",
   "ALIADO 56": "JESUS BURGOS Y COMPAÑÍA S.A.S - JAB -S.A.S",
   "ALIADO 57": "COOPERATIVA MULTIACTIVA",
-});
+};
