@@ -1,12 +1,8 @@
 // ══════════════════════════════════════════════════════════
-// ARCHIVO DE CONFIGURACIÓN — NOMBRES DE ALIADOS
+// NOMBRES DE ALIADOS — Edita los valores de la derecha
+// Este archivo sobreescribe los nombres del dashboard
 // ══════════════════════════════════════════════════════════
-// Edita este archivo con los nombres reales.
-// NO modifiques el dashboard_hse_real.html
-//
-// Formato: "ALIADO X": "Nombre real de la empresa",
-// ══════════════════════════════════════════════════════════
-
+ 
 Object.assign(NOMBRES_ALIADOS, {
   "ALIADO 1":  "CONSORCIO SKF OMIA",
   "ALIADO 2":  "CONFIPETROL",
