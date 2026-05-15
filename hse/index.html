@@ -631,7 +631,7 @@ function renderAliado(id){
   const scores=a.evaluaciones.map(e=>e.score);
   chEvol=new Chart(ctx1,{type:'line',
     data:{labels,datasets:[
-      {label:id,data:scores,borderColor:a.color,backgroundColor:a.color+'18',borderWidth:2.5,pointRadius:scores.map((_,i)=>i===scores.length-1?5:2),pointBackgroundColor:scores.map(s=>sc(s)),tension:.35,fill:true},
+      {label:getNombre(id),data:scores,borderColor:a.color,backgroundColor:a.color+'18',borderWidth:2.5,pointRadius:scores.map((_,i)=>i===scores.length-1?5:2),pointBackgroundColor:scores.map(s=>sc(s)),tension:.35,fill:true},
       {label:'Umbral 60%',data:labels.map(()=>60),borderColor:'rgba(248,113,113,.3)',borderDash:[4,3],borderWidth:1,pointRadius:0,fill:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#64748b',font:{size:10},boxWidth:10}},tooltip:{...BTD,callbacks:{label:c=>`Score: ${c.raw}%`}}},scales:bscales(0)}
@@ -677,7 +677,7 @@ function renderAliado(id){
       <div class="aico">${s>=80?'⭐':s>=60?'ℹ️':'🚨'}</div>
       <div class="acont">
         <div class="atitle">Situación general</div>
-        <div class="abody">${id} presenta desempeño ${st} (${s}%) con ${a.evaluaciones.length} evaluación${a.evaluaciones.length!==1?'es':''} registradas. Su tendencia indica ${tt}.</div>
+        <div class="abody">${getNombre(id)} presenta desempeño ${st} (${s}%) con ${a.evaluaciones.length} evaluación${a.evaluaciones.length!==1?'es':''} registradas. Su tendencia indica ${tt}.</div>
       </div>
     </div>
     ${worstAsp?`<div class="alert ${worstAsp[1]<60?'red':'amber'}">
@@ -714,7 +714,7 @@ function renderHeatmap(){
   sorted.forEach(a=>{
     const le=a.evaluaciones[a.evaluaciones.length-1];
     const gs=last(a),gc=hc(gs);
-    h+=`<tr><td class="rl" onclick="gaDetail('${a.id}')">${a.id}</td>`;
+    h+=`<tr><td class="rl" onclick="gaDetail('${a.id}')" title="${getNombre(a.id)}">${getNombre(a.id)}</td>`;
     ASPECTOS.forEach(asp=>{
       const v=le?.aspectos?.[asp];
       if(v!==undefined){const c=hc(v);h+=`<td style="background:${c.bg};color:${c.c}">${v}%</td>`;}
@@ -732,7 +732,7 @@ function renderRanking(){
     return `<div class="ritem">
       <div class="rpos" style="color:${i<3?col:'#334155'}">${i+1}</div>
       <div class="rdet">
-        <div class="rname"><span>${a.id}</span><span style="font-family:var(--font-m);font-size:9px;color:${d>=0?'#34d399':'#f87171'}">${d>=0?'+':''}${d} total</span></div>
+        <div class="rname"><span>${getNombre(a.id)}</span><span style="font-family:var(--font-m);font-size:9px;color:${d>=0?'#34d399':'#f87171'}">${d>=0?'+':''}${d} total</span></div>
         <div class="rtrack"><div class="rfill" style="width:${s}%;background:${col}"></div></div>
       </div>
       <div class="rscore" style="color:${col}">${s}%</div>
@@ -886,7 +886,7 @@ function initScatterCultura(){
           callbacks:{
             label:c=>{
               if(!c.raw.x) return '';
-              const al = CULTURA.find(a=>a.id===c.dataset.label);
+              const al = CULTURA.find(a=>getNombre(a.id)===c.dataset.label);
               return [
                 `${getNombre(c.dataset.label)}`,
                 `Score: ${c.raw.x}% | Cultura: ${c.raw.y}`,
