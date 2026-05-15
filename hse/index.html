@@ -236,7 +236,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,16,0.95);
   <div class="narr-eye">Resumen ejecutivo · Evaluación integral aliados 2023–2025</div>
   <div class="narr-h">La cartera promedia <em>78.8%</em> — pero <span class="warn">4 aliados en zona crítica</span> requieren intervención inmediata</div>
   <div class="narr-b">
-    De los 49 aliados evaluados, 29 superan el umbral de excelencia (≥80%). Sin embargo, <strong>ALIADO 21, 22, 25 y 39</strong> están por debajo del umbral de aprobación (60%), con caídas de hasta 45 puntos en su último período. Seguridad Física es el aspecto más débil de la cartera con 66.7% de promedio — 18 puntos por debajo de SST.
+    De los 49 aliados evaluados, 29 superan el umbral de excelencia (≥80%). Sin embargo, <strong id="narr-criticos">aliados críticos</strong> están por debajo del umbral de aprobación (60%), con caídas de hasta 45 puntos en su último período. Seguridad Física es el aspecto más débil de la cartera con 66.7% de promedio — 18 puntos por debajo de SST.
   </div>
   <div class="narr-stats">
     <div class="nst"><div class="nst-v" style="color:var(--cyan)">78.8%</div><div class="nst-l">Promedio cartera<br><span style="color:var(--green)">↑ Sobre benchmark 65%</span></div></div>
@@ -248,9 +248,9 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,16,0.95);
 </div>
 
 <div class="chips">
-  <div class="chip"><span class="chip-ico">🏆</span>ALIADO 6 logró 100% en 7 evaluaciones consecutivas</div>
-  <div class="chip"><span class="chip-ico">🚀</span>ALIADO 32 la mayor mejora: +60.6 puntos</div>
-  <div class="chip"><span class="chip-ico">📉</span>ALIADO 39 la mayor caída: -45.3 puntos — intervención urgente</div>
+  <div class="chip"><span class="chip-ico">🏆</span><span id="chip-lider"></span></div>
+  <div class="chip"><span class="chip-ico">🚀</span><span id="chip-mejora"></span></div>
+  <div class="chip"><span class="chip-ico">📉</span><span id="chip-caida"></span></div>
   <div class="chip"><span class="chip-ico">💪</span>SST es el aspecto más fuerte: 87.9% promedio</div>
 </div>
 
@@ -446,6 +446,20 @@ function gv(id,btn){
 
 // ══ VIEW GENERAL ═════════════════════════════════════════
 function initOverview(){
+  // Populate dynamic chips with real names
+  const lider = [...RAW].sort((a,b)=>b.n_evals-a.n_evals)[0];
+  const mejora = [...RAW].filter(a=>a.evaluaciones.length>1).sort((a,b)=>deltaTotal(b)-deltaTotal(a))[0];
+  const caida  = [...RAW].filter(a=>a.evaluaciones.length>1).sort((a,b)=>deltaTotal(a)-deltaTotal(b))[0];
+  const el1=document.getElementById('chip-lider');
+  const el2=document.getElementById('chip-mejora');
+  const el3=document.getElementById('chip-caida');
+  if(el1) el1.textContent=getNombre(lider?.id||'')+' logró 100% en múltiples evaluaciones';
+  if(el2) el2.textContent=getNombre(mejora?.id||'')+' mayor mejora: +'+deltaTotal(mejora||RAW[0])+' puntos';
+  if(el3) el3.textContent=getNombre(caida?.id||'')+' mayor caída: '+deltaTotal(caida||RAW[0])+' puntos — intervención urgente';
+  const criticos=RAW.filter(a=>last(a)<60).map(a=>getNombre(a.id)).join(', ');
+  const nc=document.getElementById('narr-criticos');
+  if(nc) nc.textContent=criticos;
+
   // KPIs
   const total = RAW.length; // 49 aliados
   const crit  = RAW.filter(a=>last(a)<60).length;
@@ -732,7 +746,7 @@ function initMulti(){
   const data=showAll?RAW:[...RAW].sort((a,b)=>b.evaluaciones.length-a.evaluaciones.length).slice(0,10);
   chMulti=new Chart(ctx,{type:'line',
     data:{labels:['E1','E2','E3','E4','E5','E6','E7','E8'],
-      datasets:data.map(a=>({label:a.id,data:a.evaluaciones.slice(0,8).map(e=>e.score),borderColor:a.color,backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:.3}))},
+      datasets:data.map(a=>({label:getNombre(a.id),data:a.evaluaciones.slice(0,8).map(e=>e.score),borderColor:a.color,backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:.3}))},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{labels:{color:'#475569',font:{size:9},boxWidth:8,padding:6}},tooltip:{...BTD}},
       scales:{x:{ticks:{color:'#334155',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}},
@@ -744,7 +758,7 @@ function toggleComp(btn){showAll=!showAll;btn.textContent=showAll?'Todos / Top10
 function initQuad(){
   const ctx=document.getElementById('ch-quad').getContext('2d');
   if(chQuad) chQuad.destroy();
-  const ds=RAW.map(a=>({x:last(a),y:deltaTotal(a),label:getNombre(a.id),color:a.color}));
+  const ds=RAW.map(a=>({x:last(a),y:deltaTotal(a),label:getNombre(a.id),color:a.color,id:a.id}));
   chQuad=new Chart(ctx,{type:'scatter',
     data:{datasets:ds.map(d=>({label:d.label,data:[{x:d.x,y:d.y}],backgroundColor:d.color+'cc',pointRadius:7,pointHoverRadius:9}))},
     options:{responsive:true,maintainAspectRatio:false,
@@ -822,6 +836,10 @@ let chScatCult = null;
 function initCultura(){
   if(culturaInit) return;
   culturaInit = true;
+  // Populate dynamic cultura narrative
+  const paradoja=[...CULTURA].filter(a=>a.score_actual>=75&&a.indice<55).sort((a,b)=>(b.score_actual-b.indice)-(a.score_actual-a.indice))[0];
+  const elp=document.getElementById('cult-paradoja');
+  if(elp&&paradoja) elp.textContent=getNombre(paradoja.id)+' tiene '+paradoja.score_actual+'% de cumplimiento pero cultura de '+paradoja.indice;
   initScatterCultura();
   renderRankingCultura();
   renderMaquillaje();
@@ -833,7 +851,7 @@ function initScatterCultura(){
 
   // Cuadrante lines
   const datasets = CULTURA.map(a=>({
-    label: a.id,
+    label: getNombre(a.id),
     data:[{x: a.score_actual, y: a.indice}],
     backgroundColor: a.nivel_color + 'cc',
     pointRadius: 8,
@@ -967,7 +985,7 @@ window.addEventListener('load',()=>{ initOverview(); });
 
 <div class="narr" style="border-color:rgba(192,132,252,.2);background:linear-gradient(135deg,rgba(192,132,252,.07),rgba(56,189,248,.04))">
   <div class="narr-eye" style="color:var(--purple)">Índice de Cultura HSE · Análisis preliminar</div>
-  <div class="narr-h">El score no cuenta toda la historia —<br><em style="color:var(--purple)">ALIADO 30 tiene 97% de cumplimiento pero cultura de 37.5</em></div>
+  <div class="narr-h">El score no cuenta toda la historia —<br><em style="color:var(--purple)" id="cult-paradoja">aliado con mayor brecha score/cultura</em></div>
   <div class="narr-b">
     El Índice de Cultura HSE mide lo que el score de auditoría no puede ver: si el cumplimiento es real o es reactivo a la visita.
     Un aliado con cultura consolidada mantiene resultados consistentes, sin brechas entre lo que muestra y lo que vive internamente,
