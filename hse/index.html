@@ -222,7 +222,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,16,0.95);
   <div class="nav">
     <button class="ntab on" onclick="gv('overview',this)">General</button>
     <button class="ntab" onclick="gv('aliado',this)">Aliado</button>
-    <button class="ntab" onclick="gv('cartera',this)">Cartera</button>
+    <button class="ntab" onclick="gv('cartera',this)">📋 Aliados</button>
     <button class="ntab" onclick="gv('acciones',this)">Acciones</button>
     <button class="ntab" onclick="gv('cultura',this)">🧠 Cultura</button>
   </div>
@@ -238,15 +238,15 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,16,0.95);
 
 <div class="narr">
   <div class="narr-eye">Resumen ejecutivo · Evaluación integral aliados 2023–2025</div>
-  <div class="narr-h">La cartera promedia <em>78.8%</em> — pero <span class="warn">4 aliados en zona crítica</span> requieren intervención inmediata</div>
+  <div class="narr-h">El portafolio de aliados promedia <em>78.8%</em> — pero <span class="warn">4 aliados en en riesgo</span> requieren intervención inmediata</div>
   <div class="narr-b">
-    De los 49 aliados evaluados, 29 superan el umbral de excelencia (≥80%). Sin embargo, <strong id="narr-criticos">aliados críticos</strong> están por debajo del umbral de aprobación (60%), con caídas de hasta 45 puntos en su último período. Seguridad Física es el aspecto más débil de la cartera con 66.7% de promedio — 18 puntos por debajo de SST.
+    De los 49 aliados evaluados, 29 superan el umbral de excelencia (≥80%). Sin embargo, <strong id="narr-criticos">aliados en riesgo</strong> están por debajo del umbral de aprobación (60%), con caídas de hasta 45 puntos en su último período. Seguridad Física es el aspecto más débil del portafolio con 66.7% de promedio — 18 puntos por debajo de SST.
   </div>
   <div class="narr-stats">
-    <div class="nst"><div class="nst-v" style="color:var(--cyan)">78.8%</div><div class="nst-l">Promedio cartera<br><span style="color:var(--green)">↑ Sobre benchmark 65%</span></div></div>
+    <div class="nst"><div class="nst-v" style="color:var(--cyan)">78.8%</div><div class="nst-l">Promedio portafolio<br><span style="color:var(--green)">↑ Por encima del sector (65%)</span></div></div>
     <div class="nst"><div class="nst-v" style="color:var(--green)">29/50</div><div class="nst-l">Aliados con<br>excelencia ≥80%</div></div>
-    <div class="nst"><div class="nst-v" style="color:var(--red)">4</div><div class="nst-l">En zona crítica<br>&lt;60% · Intervención ya</div></div>
-    <div class="nst"><div class="nst-v" style="color:var(--amber)">Seg. Física</div><div class="nst-l">Aspecto más débil<br>66.7% promedio cartera</div></div>
+    <div class="nst"><div class="nst-v" style="color:var(--red)">4</div><div class="nst-l">En en riesgo<br>&lt;60% · Intervención ya</div></div>
+    <div class="nst"><div class="nst-v" style="color:var(--amber)">Seg. Física</div><div class="nst-l">Aspecto más débil<br>66.7% promedio del portafolio</div></div>
     <div class="nst"><div class="nst-v" style="color:var(--purple)">ALIADO 6</div><div class="nst-l">Líder · 22 evaluaciones<br>100% en múltiples períodos</div></div>
   </div>
 </div>
@@ -262,12 +262,12 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,16,0.95);
 
 <div class="gside">
   <div class="card">
-    <div class="ch"><div class="cl">Estado cartera — 50 aliados</div></div>
+    <div class="ch"><div class="cl">Estado actual — 49 aliados</div></div>
     <div class="alist" id="alist-ov"></div>
   </div>
   <div class="card">
     <div class="ch">
-      <div class="cl">Score promedio cartera — evolución temporal</div>
+      <div class="cl">Score promedio del portafolio — evolución temporal</div>
     </div>
     <div style="height:310px"><canvas id="ch-trend"></canvas></div>
   </div>
@@ -275,7 +275,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,16,0.95);
 
 <div class="g2">
   <div class="card">
-    <div class="ch"><div class="cl">Promedio por aspecto — cartera completa</div></div>
+    <div class="ch"><div class="cl">Promedio por aspecto — resumen de aliados</div></div>
     <div id="asp-bars"></div>
   </div>
   <div class="card">
@@ -319,7 +319,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,16,0.95);
 
 <div class="g2">
   <div class="card">
-    <div class="ch"><div class="cl">Radar — perfil del aliado vs promedio cartera</div></div>
+    <div class="ch"><div class="cl">Radar — perfil del aliado vs promedio del portafolio</div></div>
     <div style="height:250px"><canvas id="ch-radar"></canvas></div>
   </div>
   <div class="card">
@@ -335,7 +335,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,16,0.95);
 <div class="body">
 
 <div style="margin-bottom:16px">
-  <div style="font-family:var(--font-d);font-size:20px;font-weight:800;letter-spacing:-.5px">Mapa de cartera completo</div>
+  <div style="font-family:var(--font-d);font-size:20px;font-weight:800;letter-spacing:-.5px">Mapa de desempeño completo</div>
   <div style="font-size:12px;color:var(--t2);margin-top:2px">50 aliados · Score global y por aspecto · Último período</div>
 </div>
 
@@ -346,12 +346,12 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,16,0.95);
 
 <div class="g2">
   <div class="card">
-    <div class="ch"><div class="cl">Ranking score global — último período</div></div>
+    <div class="ch"><div class="cl">Clasificación por score — último período</div></div>
     <div id="ranking" style="max-height:520px;overflow-y:auto"></div>
   </div>
   <div class="card">
     <div class="ch">
-      <div class="cl">Comparativa multi-aliado — evolución</div>
+      <div class="cl">Evolución histórica — comparativa de aliados</div>
       <button class="ca" onclick="toggleComp(this)">Top 10 / Todos</button>
     </div>
     <div style="height:350px"><canvas id="ch-multi"></canvas></div>
@@ -359,7 +359,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,16,0.95);
 </div>
 
 <div class="card">
-  <div class="ch"><div class="cl">Cuadrante estratégico — Score actual vs Variación</div>
+  <div class="ch"><div class="cl">Análisis estratégico — Desempeño actual vs Variación histórica</div>
     <span style="font-size:10px;color:var(--t2)">Ideal: cuadrante superior derecho (score alto + mejora)</span>
   </div>
   <div style="height:320px"><canvas id="ch-quad"></canvas></div>
@@ -377,7 +377,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,16,0.95);
 </div>
 
 <div class="g3">
-  <div><div class="cl" style="display:block;margin-bottom:8px">🚨 INTERVENCIÓN INMEDIATA</div><div id="acc-crit"></div></div>
+  <div><div class="cl" style="display:block;margin-bottom:8px">🚨 REQUIEREN ACCIÓN INMEDIATA</div><div id="acc-crit"></div></div>
   <div><div class="cl" style="display:block;margin-bottom:8px">⚠️ SEGUIMIENTO ESTRECHO</div><div id="acc-watch"></div></div>
   <div><div class="cl" style="display:block;margin-bottom:8px">⭐ REFERENTES Y CASOS DE ÉXITO</div><div id="acc-stars"></div></div>
 </div>
@@ -457,7 +457,7 @@ function initOverview(){
   const el1=document.getElementById('chip-lider');
   const el2=document.getElementById('chip-mejora');
   const el3=document.getElementById('chip-caida');
-  if(el1) el1.textContent=getNombre(lider?.id||'')+' logró 100% en múltiples evaluaciones';
+  if(el1) el1.textContent=getNombre(lider?.id||'')+' con el mayor número de evaluaciones';
   if(el2) el2.textContent=getNombre(mejora?.id||'')+' mayor mejora: +'+deltaTotal(mejora||RAW[0])+' puntos';
   if(el3) el3.textContent=getNombre(caida?.id||'')+' mayor caída: '+deltaTotal(caida||RAW[0])+' puntos — intervención urgente';
   const criticos=RAW.filter(a=>last(a)<60).map(a=>getNombre(a.id)).join(', ');
@@ -471,10 +471,10 @@ function initOverview(){
   const avg   = Math.round(RAW.reduce((s,a)=>s+last(a),0)/RAW.length*10)/10;
   const mejor = [...RAW].filter(a=>a.evaluaciones.length>1).sort((a,b)=>deltaTotal(b)-deltaTotal(a))[0];
   document.getElementById('kpis-overview').innerHTML = [
-    {l:'Score promedio',v:avg+'%',c:'var(--cyan)',cx:'Benchmark sector: 65%<br>Umbral aprobación: 60%',d:'↑ +13.8 pts sobre benchmark',dc:'dp'},
-    {l:'Excelencia ≥80%',v:excel,c:'var(--green)',cx:`${excel} aliados sobre umbral<br>de desempeño alto`,d:'↑ Mayor grupo',dc:'dp'},
-    {l:'Zona crítica <60%',v:crit,c:'var(--red)',cx:'Requieren intervención<br>inmediata',d:'↓ Riesgo operativo',dc:'dn'},
-    {l:'Total aliados',v:total,c:'var(--purple)',cx:'Evaluados 2023–2025<br>125 fechas únicas',d:'→ Cartera activa',dc:'df'},
+    {l:'Score promedio',v:avg+'%',c:'var(--cyan)',cx:'Referencia del sector: 65%<br>Umbral aprobación: 60%',d:'↑ +13.8 pts sobre referencia del sector',dc:'dp'},
+    {l:'Desempeño alto ≥80%',v:excel,c:'var(--green)',cx:`${excel} aliados sobre umbral<br>de desempeño alto`,d:'↑ Mayor grupo',dc:'dp'},
+    {l:'Requieren intervención <60%',v:crit,c:'var(--red)',cx:'Requieren intervención<br>inmediata',d:'↓ Riesgo operativo',dc:'dn'},
+    {l:'Total aliados',v:total,c:'var(--purple)',cx:'Evaluados 2023–2025<br>125 visitas registradas',d:'→ Portafolio activo',dc:'df'},
     {l:'Mayor mejora',v:mejor?.id||'—',c:'var(--gold)',cx:`+${deltaTotal(mejor||RAW[0])} pts total<br>evaluaciones`,d:'↑ Caso de éxito',dc:'dp'},
   ].map(k=>`<div class="kpi" style="color:${k.c}">
     <div class="kl">${k.l}</div>
@@ -537,8 +537,8 @@ function initTrendChart(){
   
   chTrend=new Chart(ctx,{type:'line',
     data:{labels:meses,datasets:[
-      {label:'Promedio cartera',data:avgs,borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.07)',borderWidth:2.5,pointRadius:3,pointBackgroundColor:avgs.map(s=>sc(s)),tension:.4,fill:true},
-      {label:'Benchmark 65%',data:bench,borderColor:'rgba(251,191,36,.35)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false},
+      {label:'Promedio aliados',data:avgs,borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.07)',borderWidth:2.5,pointRadius:3,pointBackgroundColor:avgs.map(s=>sc(s)),tension:.4,fill:true},
+      {label:'Referencia del sector (65%)',data:bench,borderColor:'rgba(251,191,36,.35)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false},
       {label:'Umbral 60%',data:umbral,borderColor:'rgba(248,113,113,.3)',borderDash:[4,3],borderWidth:1,pointRadius:0,fill:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#64748b',font:{size:10},boxWidth:10,padding:10}},tooltip:{...BTD}},scales:bscales(40)}
@@ -572,7 +572,7 @@ function initDistChart(){
   const dev=RAW.filter(a=>last(a)>=60&&last(a)<80).length;
   const exc=RAW.filter(a=>last(a)>=80).length;
   chDist=new Chart(ctx,{type:'doughnut',
-    data:{labels:['Crítico <60%','Desarrollo 60-79%','Excelencia ≥80%'],
+    data:{labels:['Requieren intervención <60%','En mejora 60-79%','Desempeño alto ≥80%'],
       datasets:[{data:[crit,dev,exc],backgroundColor:['rgba(248,113,113,.7)','rgba(251,191,36,.7)','rgba(52,211,153,.7)'],borderColor:'transparent',borderWidth:0}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
       plugins:{legend:{display:false},tooltip:{...BTD,callbacks:{label:c=>`${c.label}: ${c.raw} aliados`}}}}
@@ -614,8 +614,9 @@ function renderAliado(id){
   const lastAsps=lastE?.aspectos||{};
 
   // KPIs
-  const bestAsp=Object.entries(lastAsps).sort((a,b)=>b[1]-a[1])[0];
-  const worstAsp=Object.entries(lastAsps).sort((a,b)=>a[1]-b[1])[0];
+  const aspEntries=Object.entries(lastAsps).sort((a,b)=>b[1]-a[1]);
+  const bestAsp=aspEntries[0]||null;
+  const worstAsp=aspEntries.length>1 ? aspEntries[aspEntries.length-1] : null;
   document.getElementById('al-kpis').innerHTML=[
     {l:'Score actual',v:s+'%',c:sc(s),cx:'Último período evaluado',d:`${d>=0?'↑ +':'↓ '}${Math.abs(d)} pts vs anterior`,dc:d>=0?'dp':'dn'},
     {l:'Tendencia',v:tIcon(t)+' '+(t==='up'?'Mejora':t==='down'?'Declive':'Estable'),c:tCol(t),cx:'Últimas 3 evaluaciones',d:`${a.evaluaciones.length} evaluaciones total`,dc:'df'},
@@ -666,7 +667,7 @@ function renderAliado(id){
   chRadar=new Chart(ctx2,{type:'radar',
     data:{labels:ASPECTOS,datasets:[
       {label:getNombre(id),data:aspVals,borderColor:a.color,backgroundColor:a.color+'18',borderWidth:2,pointBackgroundColor:a.color},
-      {label:'Promedio cartera',data:aspAvg,borderColor:'rgba(255,255,255,.15)',backgroundColor:'transparent',borderWidth:1,borderDash:[4,3],pointRadius:0},
+      {label:'Promedio aliados',data:aspAvg,borderColor:'rgba(255,255,255,.15)',backgroundColor:'transparent',borderWidth:1,borderDash:[4,3],pointRadius:0},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{labels:{color:'#64748b',font:{size:10},boxWidth:10}}},
@@ -816,8 +817,8 @@ function initAcciones(){
   const asp=Object.entries({SST:87.9,'Seguridad Física':66.7,Ambiental:77.8,Entorno:77.4,'Seguridad de Procesos':84.1}).sort((a,b)=>a[1]-b[1])[0];
   document.getElementById('recomends').innerHTML=[
     {type:'red',ico:'1️⃣',t:'Intervención inmediata — 4 aliados críticos',b:`Activar protocolo de desarrollo de proveedores para ${crit.map(a=>getNombre(a.id)).join(', ')}. Visita de campo en las próximas 2 semanas. Plan de mejora con hitos mensuales. Considerar impacto contractual si no mejoran en el próximo período.`},
-    {type:'amber',ico:'2️⃣',t:`Reforzar ${asp[0]} en toda la cartera`,b:`Con ${asp[1]}% es el aspecto más débil del portafolio. Un taller colectivo impacta a todos los aliados simultáneamente. Mayor ROI de cualquier acción de desarrollo.`},
-    {type:'blue',ico:'3️⃣',t:'Programa de reconocimiento formal',b:`${getNombre(stars[0]?.id||'')} y ${getNombre(stars[1]?.id||'')} son referentes con scores de excelencia sostenidos. Organizar intercambio de buenas prácticas acelera la mejora del resto de la cartera.`},
+    {type:'amber',ico:'2️⃣',t:`Reforzar ${asp[0]} en todo el portafolio`,b:`Con ${asp[1]}% es el aspecto más débil del portafolio. Un taller colectivo impacta a todos los aliados simultáneamente. Mayor ROI de cualquier acción de desarrollo.`},
+    {type:'blue',ico:'3️⃣',t:'Programa de reconocimiento formal',b:`${getNombre(stars[0]?.id||'')} y ${getNombre(stars[1]?.id||'')} son referentes con scores de excelencia sostenidos. Organizar intercambio de buenas prácticas acelera la mejora del resto de aliados.`},
     {type:'green',ico:'4️⃣',t:'Digitalización del seguimiento',b:`Con 50 aliados y evaluaciones múltiples por año, el seguimiento manual es ineficiente. La plataforma digital reduce el tiempo de auditoría y permite alertas automáticas antes de que un aliado caiga bajo umbral.`},
   ].map(r=>`<div class="alert ${r.type}">
     <div class="aico">${r.ico}</div>
@@ -974,7 +975,7 @@ function renderMaquillaje(){
       <div class="aico">✅</div>
       <div class="acont">
         <div class="atitle">${getNombre(a.id)} — Score ${a.score_actual}% · Cultura ${a.indice}</div>
-        <div class="abody">Cultura genuina confirmada. Consistente, coherente y en mejora. Referente para el resto de la cartera.</div>
+        <div class="abody">Cultura genuina confirmada. Consistente, coherente y en mejora. Referente para el resto de aliados.</div>
         <span class="atag tgrn">CASO DE ÉXITO</span>
       </div>
     </div>`).join('');
@@ -999,7 +1000,7 @@ window.addEventListener('load',()=>{
     y mejora de forma sostenida. <strong>16 aliados (33%) muestran señales de cumplimiento reactivo — cumplen para la auditoría, no por convicción.</strong>
   </div>
   <div class="narr-stats">
-    <div class="nst"><div class="nst-v" style="color:var(--purple)" id="c-avg">53.6</div><div class="nst-l">Índice promedio<br>cartera completa</div></div>
+    <div class="nst"><div class="nst-v" style="color:var(--purple)" id="c-avg">53.6</div><div class="nst-l">Índice promedio<br>resumen de aliados</div></div>
     <div class="nst"><div class="nst-v" style="color:var(--green)" id="c-consol">3</div><div class="nst-l">Cultura<br>Consolidada ≥80</div></div>
     <div class="nst"><div class="nst-v" style="color:var(--red)" id="c-sin">16</div><div class="nst-l">Sin Cultura HSE<br>&lt;50 — Riesgo real</div></div>
     <div class="nst"><div class="nst-v" style="color:var(--amber)">97% → 37</div><div class="nst-l">Mayor paradoja<br>ALIADO 30</div></div>
@@ -1007,7 +1008,7 @@ window.addEventListener('load',()=>{
 </div>
 
 <div class="chips">
-  <div class="chip"><span class="chip-ico">🎭</span>ALIADO 30: 97.4% score pero cultura 37.5 — la mayor brecha de la cartera</div>
+  <div class="chip"><span class="chip-ico">🎭</span>ALIADO 30: 97.4% score pero cultura 37.5 — la mayor brecha del portafolio</div>
   <div class="chip"><span class="chip-ico">✅</span>ALIADO 5: Cultura genuina — 92.5 índice + 94.3% score</div>
   <div class="chip"><span class="chip-ico">⚠️</span>32% de aliados con cumplimiento reactivo — solo cumplen en la visita</div>
   <div class="chip"><span class="chip-ico">🧠</span>3 factores: Consistencia 40% · Coherencia 30% · Tendencia 30%</div>
@@ -1051,7 +1052,7 @@ window.addEventListener('load',()=>{
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;font-size:10px">
     <div style="background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);border-radius:8px;padding:8px;text-align:center">
       <div style="color:var(--green);font-weight:700;margin-bottom:2px">✅ Cultura Real</div>
-      <div style="color:var(--t2)">Score alto + Cultura alta<br>Referentes de la cartera</div>
+      <div style="color:var(--t2)">Score alto + Cultura alta<br>Referentes del portafolio</div>
     </div>
     <div style="background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:8px;padding:8px;text-align:center">
       <div style="color:var(--amber);font-weight:700;margin-bottom:2px">⚠️ En Desarrollo</div>
